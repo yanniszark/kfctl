@@ -636,8 +636,17 @@ func MergeKustomization(compDir string, targetDir string, kfDef *kfconfig.KfConf
 		if childConfigMapArgs.FileSources != nil && len(childConfigMapArgs.FileSources) > 0 {
 			parentConfigMapArgs.FileSources = make([]string, 0)
 			for _, fileSource := range childConfigMapArgs.FileSources {
-				fileAbsolutePathSource := path.Join(targetDir, fileSource)
-				parentConfigMapArgs.EnvSource = extractSuffix(compDir, fileAbsolutePathSource)
+				var key, path = "", fileSource
+				if strings.Contains(path, "=") {
+					parts := strings.Split(fileSource, "=")
+					key, path = parts[0], parts[1]
+				}
+				absolutePath := filepath.Join(targetDir, path)
+				destFileSource := extractSuffix(compDir, absolutePath)
+				if key != "" {
+					destFileSource = fmt.Sprintf("%s=%s", key, destFileSource)
+				}
+				parentConfigMapArgs.FileSources = append(parentConfigMapArgs.FileSources, destFileSource)
 			}
 		}
 		if childConfigMapArgs.LiteralSources != nil && len(childConfigMapArgs.LiteralSources) > 0 {

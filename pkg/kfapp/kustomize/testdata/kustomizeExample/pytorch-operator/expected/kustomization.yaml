@@ -8,6 +8,10 @@ commonLabels:
   app.kubernetes.io/name: pytorch-operator-application
   app.kubernetes.io/part-of: kubeflow
   app.kubernetes.io/version: v0.6.0
+configMapGenerator:
+- files:
+  - overlays/application/cm-gen-file
+  name: app-cm
 kind: Kustomization
 namespace: kubeflow
 resources:

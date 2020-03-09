@@ -11,3 +11,8 @@ commonLabels:
   app.kubernetes.io/component: pytorch
   app.kubernetes.io/part-of: kubeflow
   app.kubernetes.io/managed-by: kfctl
+configMapGenerator:
+- name: app-cm
+  files:
+  - cm-gen-file
+  behavior: create
